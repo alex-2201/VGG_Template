@@ -175,7 +175,7 @@ def train_model(net, dataloader_dict, criterion, optimizer, start_epoch):
                 checkpoint = {
                     'net_dict': best_model_wts,
                     'acc': epoch_acc,
-                    'epoch': epoch,
+                    'epoch': epoch + 1,
                 }
                 if not os.path.isdir('/mydrive/VGG/checkpoint'):
                     os.mkdir('/mydrive/VGG/checkpoint')
@@ -213,6 +213,7 @@ if args.resume:
     net.load_state_dict(net_dict)
     best_acc = checkpoint['acc']
     start_epoch = checkpoint['epoch']
+
 net.to(device)
 
 
