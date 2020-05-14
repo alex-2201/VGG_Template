@@ -176,9 +176,9 @@ def train_model(net, dataloader_dict, criterion, optimizer, num_epoch):
                     'acc': epoch_acc,
                     'epoch': epoch,
                 }
-                if not os.path.isdir('checkpoint'):
-                    os.mkdir('checkpoint')
-                torch.save(checkpoint, './checkpoint/ckpt.t7')
+                if not os.path.isdir('/mydrive/VGG/checkpoint'):
+                    os.mkdir('/mydrive/VGG/checkpoint')
+                torch.save(checkpoint, '/mydrive/VGG/checkpoint/ckpt.t7')
 
     time_elapsed = time.time() - since
     print('Training complete in {:.0f}m {:.0f}s'.format(
