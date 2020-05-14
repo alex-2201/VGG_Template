@@ -1,5 +1,5 @@
-# VGG_Template
 
+# Training in colab
 https://gist.github.com/alex-2201/b3f1ea12abaeffadd4727081ee20172c
 
 ## Setup
