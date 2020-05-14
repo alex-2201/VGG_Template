@@ -3,6 +3,11 @@
 https://gist.github.com/alex-2201/b3f1ea12abaeffadd4727081ee20172c
 
 ## Setup
+
+In your drive, create:
+- A folder named "secretKey" which contains your kaggle.json
+- A folder named "VGG_Template" and then create a subfolder "checkpoint" inside to save the checkpoint
+
 ```console
 from google.colab import drive
 drive.mount('/content/gdrive')
