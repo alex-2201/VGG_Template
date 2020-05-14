@@ -1,7 +1,10 @@
-import copy
-import glob
-import os
-import time
+import numpy as np # linear algebra
+import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
+import os, glob, time, copy, random, zipfile
+import matplotlib.pyplot as plt
+from PIL import Image
+from sklearn.model_selection import train_test_split
+from tqdm import tqdm_notebook as tqdm
 
 import torch
 import torch.nn as nn
@@ -10,7 +13,7 @@ import torch.utils.data as data
 from PIL import Image
 from sklearn.model_selection import train_test_split
 from torchvision import models, transforms
-from tqdm.notebook import tqdm as tqdm
+from tqdm import tqdm
 from parser import get_config
 
 # Train_dir, Test_dir
@@ -134,22 +137,28 @@ def train_model(net, dataloader_dict, criterion, optimizer, num_epoch):
             epoch_loss = 0.0
             epoch_corrects = 0
 
-            for inputs, labels in tqdm(dataloader_dict[phase]):
-                inputs = inputs.to(device)
-                labels = labels.to(device)
-                optimizer.zero_grad()
+            try:
+                with tqdm(dataloader_dict[phase]) as t:
+                    for inputs, labels in t:
+                        inputs = inputs.to(device)
+                        labels = labels.to(device)
+                        optimizer.zero_grad()
 
-                with torch.set_grad_enabled(phase == 'train'):
-                    outputs = net(inputs)
-                    _, preds = torch.max(outputs, 1)
-                    loss = criterion(outputs, labels)
+                        with torch.set_grad_enabled(phase == 'train'):
+                            outputs = net(inputs)
+                            _, preds = torch.max(outputs, 1)
+                            loss = criterion(outputs, labels)
 
-                    if phase == 'train':
-                        loss.backward()
-                        optimizer.step()
+                            if phase == 'train':
+                                loss.backward()
+                                optimizer.step()
 
-                    epoch_loss += loss.item() * inputs.size(0)
-                    epoch_corrects += torch.sum(preds == labels.data)
+                            epoch_loss += loss.item() * inputs.size(0)
+                            epoch_corrects += torch.sum(preds == labels.data)
+            except KeyboardInterrupt:
+                t.close()
+                raise
+            t.close()
 
             epoch_loss = epoch_loss / len(dataloader_dict[phase].dataset)
             epoch_acc = epoch_corrects.double() / len(dataloader_dict[phase].dataset)
