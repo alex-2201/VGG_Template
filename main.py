@@ -118,14 +118,14 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(params=params_to_update, lr=0.001, momentum=0.9)
 
 
-def train_model(net, dataloader_dict, criterion, optimizer, num_epoch):
+def train_model(net, dataloader_dict, criterion, optimizer, start_epoch):
     since = time.time()
     best_model_wts = copy.deepcopy(net.state_dict())
     best_acc = 0.0
     net = net.to(device)
 
-    for epoch in range(num_epoch):
-        print('Epoch {}/{}'.format(epoch + 1, num_epoch))
+    for epoch in range(start_epoch, start_epoch + 2):
+        print('Epoch {}/{}'.format(epoch + 1, start_epoch + 2))
         print('-' * 20)
 
         for phase in ['train', 'val']:
@@ -216,4 +216,4 @@ net.to(device)
 
 
 if __name__ == '__main__':
-    net = train_model(net, dataloader_dict, criterion, optimizer, num_epoch)
+    net = train_model(net, dataloader_dict, criterion, optimizer, checkpoint)
