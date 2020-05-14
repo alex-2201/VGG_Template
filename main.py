@@ -83,6 +83,7 @@ class DogvsCatDataset(data.Dataset):
 cfg = get_config()
 cfg.merge_from_file("./config.yaml")
 
+start_epoch = cfg.start_epoch
 size = cfg.size
 mean = cfg.mean
 std = cfg.std
@@ -124,8 +125,8 @@ def train_model(net, dataloader_dict, criterion, optimizer, start_epoch):
     best_acc = 0.0
     net = net.to(device)
 
-    for epoch in range(start_epoch, start_epoch + 2):
-        print('Epoch {}/{}'.format(epoch + 1, start_epoch + 2))
+    for epoch in range(start_epoch, start_epoch + num_epoch):
+        print('Epoch {}/{}'.format(epoch + 1, start_epoch + num_epoch))
         print('-' * 20)
 
         for phase in ['train', 'val']:
@@ -216,4 +217,5 @@ net.to(device)
 
 
 if __name__ == '__main__':
+    
     net = train_model(net, dataloader_dict, criterion, optimizer, start_epoch)
