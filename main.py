@@ -216,4 +216,4 @@ net.to(device)
 
 
 if __name__ == '__main__':
-    net = train_model(net, dataloader_dict, criterion, optimizer, checkpoint)
+    net = train_model(net, dataloader_dict, criterion, optimizer, start_epoch)
