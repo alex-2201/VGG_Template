@@ -1,3 +1,4 @@
+import argparse
 import numpy as np # linear algebra
 import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 import os, glob, time, copy, random, zipfile
@@ -170,16 +171,49 @@ def train_model(net, dataloader_dict, criterion, optimizer, num_epoch):
                 best_acc = epoch_acc
                 best_model_wts = copy.deepcopy(net.state_dict())
 
+                checkpoint = {
+                    'net_dict': best_model_wts,
+                    'acc': epoch_acc,
+                    'epoch': epoch,
+                }
+                if not os.path.isdir('checkpoint'):
+                    os.mkdir('checkpoint')
+                torch.save(checkpoint, './checkpoint/ckpt.t7')
+
     time_elapsed = time.time() - since
     print('Training complete in {:.0f}m {:.0f}s'.format(
         time_elapsed // 60, time_elapsed % 60))
     print('Best val Acc: {:4f}'.format(best_acc))
 
+    # saving checkpoint
+
+
     # load best model weights
     net.load_state_dict(best_model_wts)
+
+    
     return net
 
 
+parser = argparse.ArgumentParser()
+parser.add_argument('--resume', default='', type=str, metavar='PATH',
+                    help='path to latest checkpoint (default: none)')
+
+args = parser.parse_args()
+
+
 # Train
-num_epoch = 2
-net = train_model(net, dataloader_dict, criterion, optimizer, num_epoch)
+if args.resume:
+    assert os.path.isfile("./checkpoint/ckpt.t7"), "Error: no checkpoint file found!"
+    print('Loading from checkpoint/ckpt.t7')
+    checkpoint = torch.load("./checkpoint/ckpt.t7")
+    # import ipdb; ipdb.set_trace()
+    net_dict = checkpoint['net_dict']
+    net.load_state_dict(net_dict)
+    best_acc = checkpoint['acc']
+    start_epoch = checkpoint['epoch']
+net.to(device)
+
+
+if __name__ == '__main__':
+    net = train_model(net, dataloader_dict, criterion, optimizer, num_epoch)
